@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string.h>
+#include <sstream>
 
 #include <errno.h>
 #include <netinet/in.h>
@@ -38,7 +39,7 @@ namespace DispatchService {
       _action = SET_SLAVES_1;
     else if (resource == "/number_of_slaves_2")
       _action = SET_SLAVES_2;
-    else if ("/number_of_slaves_3")
+    else if (resource == "/number_of_slaves_3")
       _action = SET_SLAVES_3;
     else if (resource == "/statistics")
       _action = STATISTICS;
@@ -116,9 +117,18 @@ namespace DispatchService {
   }
 
   void DispatchHandler::statistics() noexcept {
+    std::cout << "statistics" << std::endl;
+    std::stringstream ss;
+
+    ss << "{\"read\": " << _readquerycounter.load()
+       << ", \"write\": " << _writequerycounter.load()
+       << ", \"timestamp\": " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count() << "}\n";
+
+    std::cout << "statistics" << std::endl;
+
     ResponseBuilder(downstream_)
       .status(200, "OK")
-      .body("This is the body!\n")
+      .body(ss.str())
       .sendWithEOM();
   }
 
