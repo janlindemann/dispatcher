@@ -117,7 +117,6 @@ namespace DispatchService {
   }
 
   void DispatchHandler::statistics() noexcept {
-    std::cout << "statistics" << std::endl;
     std::stringstream ss;
 
     ss << "{\"read\": " << _readquerycounter.load()
