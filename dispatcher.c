@@ -38,7 +38,7 @@ int query_nr = 0;   // used to schedule queries in round robin manner
 size_t number_of_read_queries;
 size_t number_of_write_queries;
 int dispatcher_socket = 0;
-const char HOSTS[ANZAHL_HOSTS][2][16] = {{"127.0.0.1", "5000"}, {"127.0.0.1", "5001"}, {"127.0.0.1", "5002"}, {"127.0.0.1", "5003"}, {"127.0.0.1", "5004"}, {"127.0.0.1", "5005"}, {"127.0.0.1", "5006"}, {"127.0.0.1", "5007"}};
+const char HOSTS[ANZAHL_HOSTS][2][16] = {{"127.0.0.1", "5000"}, {"192.168.30.176", "5001"}, {"192.168.30.177", "5002"}, {"127.0.0.1", "5003"}, {"127.0.0.1", "5004"}, {"127.0.0.1", "5005"}, {"127.0.0.1", "5006"}, {"127.0.0.1", "5007"}};
 
 int slaves = 0;
 int openSockets[MAX_SOCKETS];
@@ -47,7 +47,7 @@ int num_opensockets = 0;
 int current_master = 0;
 int active_hosts[ANZAHL_HOSTS] = {0, 1, 2, 3, 4, 5, 6, 7};
 // int active_hosts_num = ANZAHL_HOSTS;
-int active_hosts_num = 4;
+int active_hosts_num = 1;
 
 int failoverdone = 0;
 
@@ -287,7 +287,7 @@ int get_request(int sock, char *buf, int *offset, int *action, char **content, i
 #endif
     fflush(stdout);
     if (recv_size == -1) {
-        fprintf(stderr, "ERROR while receiving data\n");
+        // fprintf(stderr, "ERROR while receiving data\n");
         return -1;
     }
 
@@ -377,7 +377,7 @@ int get_response(int sock, char *buf, int *offset, int *status, char **content, 
 #endif
 
     if (recv_size <= 0) {
-        fprintf(stderr, "ERROR while receiving data\n");
+        // fprintf(stderr, "ERROR while receiving data\n");
         return -1;
     }
 
