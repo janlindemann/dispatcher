@@ -30,7 +30,8 @@
 #define STATISTICS 11
 #define DELAY_QUERY 12
 
-#define ANZAHL_HOSTS 8
+#define MAX_HOSTS 8
+#define ANZAHL_HOSTS 2
 
 
 pthread_mutex_t global_lock;
@@ -38,16 +39,15 @@ int query_nr = 0;   // used to schedule queries in round robin manner
 size_t number_of_read_queries;
 size_t number_of_write_queries;
 int dispatcher_socket = 0;
-const char HOSTS[ANZAHL_HOSTS][2][16] = {{"127.0.0.1", "5000"}, {"192.168.30.176", "5001"}, {"192.168.30.177", "5002"}, {"127.0.0.1", "5003"}, {"127.0.0.1", "5004"}, {"127.0.0.1", "5005"}, {"127.0.0.1", "5006"}, {"127.0.0.1", "5007"}};
+const char HOSTS[MAX_HOSTS][2][16] = {{"192.168.30.176", "5000"}, {"192.168.30.177", "5001"}, {"192.168.30.177", "5002"}, {"127.0.0.1", "5003"}, {"127.0.0.1", "5004"}, {"127.0.0.1", "5005"}, {"127.0.0.1", "5006"}, {"127.0.0.1", "5007"}};
 
 int slaves = 0;
 int openSockets[MAX_SOCKETS];
 int num_opensockets = 0;
 
 int current_master = 0;
-int active_hosts[ANZAHL_HOSTS] = {0, 1, 2, 3, 4, 5, 6, 7};
-// int active_hosts_num = ANZAHL_HOSTS;
-int active_hosts_num = 1;
+int active_hosts[MAX_HOSTS] = {0, 1, 2, 3, 4, 5, 6, 7};
+int active_hosts_num = ANZAHL_HOSTS;
 
 int failoverdone = 0;
 
@@ -413,7 +413,7 @@ int handle_request(int sock, int action, char *content, int content_length, int 
         int socketfd = socket_list[active_hosts[r]];
 
         char *buf;
-        asprintf(&buf, http_post, "/procedureRevenueSelect/", content_length, content);
+        asprintf(&buf, http_post, "/jsonQuery", content_length, content);
         send(socketfd, buf, strlen(buf), 0);
         free(buf);
 
@@ -445,7 +445,7 @@ int handle_request(int sock, int action, char *content, int content_length, int 
         printf("send write to master: %d\n", current_master);
 #endif
         char *buf;
-        asprintf(&buf, http_post, "/procedureRevenueInsert/", content_length, content);
+        asprintf(&buf, http_post, "/jsonQuery", content_length, content);
         send(socketfd, buf, strlen(buf), 0);
         free(buf);
 
